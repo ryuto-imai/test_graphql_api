@@ -7,7 +7,16 @@ module Queries
       argument :id, String, required: true, description: "Userのid"
 
       def resolve(params)
-        ::User.find(params[:id])
+        begin
+          ::User.find(params[:id])  
+        rescue ActiveRecord::RecordNotFound => exception
+          raise GraphQL::ExecutionError.new(
+            "id:#{params[:id]} not found",
+            extensions: {
+              code: Error::GraphqlError.codes[:not_found]
+            }
+          )
+        end
       end
     end
   end
