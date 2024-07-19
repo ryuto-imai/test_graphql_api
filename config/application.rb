@@ -12,6 +12,17 @@ module TestGraphqlApi
     config.load_defaults 7.0
     config.paths.add 'lib', eager_load: true
 
+    # CORSの設定
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins 'http://localhost:3002'
+        resource '*',
+          headers: :any,
+          methods: [:post],
+          credentials: true
+      end
+    end
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
